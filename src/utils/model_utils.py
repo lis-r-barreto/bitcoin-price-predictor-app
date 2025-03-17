@@ -3,7 +3,7 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense
-from src.bitcoin_price_predictor_app.data_utils import create_sequences
+from utils.data_process_utils import create_sequences
 
 
 def evaluate_lstm(df, column='log_return', window_size=50, epochs=20, batch_size=32, train_size_ratio=0.8, save_path="models/lstm_model.h5"):

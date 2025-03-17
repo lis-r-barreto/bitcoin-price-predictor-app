@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from tensorflow.keras.models import load_model  # For loading LSTM models
 from tensorflow.keras.losses import MeanSquaredError
-from src.bitcoin_price_predictor_app.visualization import (
+from utils.data_viz_utils import (
     line_plot,
     seasonality_analysis,
     volatility_analysis,
@@ -11,9 +11,9 @@ from src.bitcoin_price_predictor_app.visualization import (
     plot_lstm_predictions,
 )
 
-from src.bitcoin_price_predictor_app.data_utils import create_dataset
+from utils.data_process_utils import create_dataset
 
-from src.bitcoin_price_predictor_app.models import prepare_lstm_data
+from utils.model_utils import prepare_lstm_data
 
 # Function to load data from a Parquet file
 @st.cache_data
@@ -50,6 +50,7 @@ def main():
 
     # Tab 1: Data Analysis
     with tab1:
+        st.session_state.current_tab = 0
         st.header("Data Analysis")
         st.markdown(
             """
@@ -97,6 +98,7 @@ def main():
 
     # Tab 2: Technical Indicators
     with tab2:
+        st.session_state.current_tab = 1
         st.header("Technical Indicators")
         st.markdown(
             """
@@ -116,6 +118,7 @@ def main():
 
     # Tab 4: Model Prediction
     with tab3:
+        st.session_state.current_tab = 2
         st.header("Model Prediction")
         st.markdown(
             """
@@ -148,6 +151,9 @@ def main():
 
             # Plot the results
             plot_lstm_predictions(df_2, lstm_predictions, title="LSTM Predictions vs Actual Prices")
+    
+    if st.session_state.current_tab == 2:
+        st.session_state.current_tab = 2
 
 def display_credits():
     st.markdown(
