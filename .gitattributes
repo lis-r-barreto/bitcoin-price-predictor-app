@@ -1,0 +1,44 @@
+# Rastrear arquivos de imagem com Git LFS
+*.png filter=lfs diff=lfs merge=lfs -text
+*.jpg filter=lfs diff=lfs merge=lfs -text
+*.jpeg filter=lfs diff=lfs merge=lfs -text
+*.gif filter=lfs diff=lfs merge=lfs -text
+*.bmp filter=lfs diff=lfs merge=lfs -text
+*.tiff filter=lfs diff=lfs merge=lfs -text
+*.svg filter=lfs diff=lfs merge=lfs -text
+
+# Rastrear arquivos de dados com Git LFS
+*.csv filter=lfs diff=lfs merge=lfs -text
+*.parquet filter=lfs diff=lfs merge=lfs -text
+*.json filter=lfs diff=lfs merge=lfs -text
+*.xml filter=lfs diff=lfs merge=lfs -text
+*.xlsx filter=lfs diff=lfs merge=lfs -text
+*.xls filter=lfs diff=lfs merge=lfs -text
+
+# Rastrear arquivos de artefatos de modelo com Git LFS
+*.pickle filter=lfs diff=lfs merge=lfs -text
+*.h5 filter=lfs diff=lfs merge=lfs -text
+
+# Ignorar arquivos de log
+*.log export-ignore
+
+# Ignorar arquivos temporários
+*.tmp export-ignore
+*.temp export-ignore
+
+# Configurações para arquivos de texto
+*.txt text
+*.md text
+
+# Configurações para arquivos de código
+*.py text
+*.js text
+*.html text
+*.css text
+
+# Excluir arquivos do GitHub linguist
+*.png linguist-generated
+*.jpeg linguist-generated
+*.jpg linguist-generated
+*.gif linguist-generated
+*.csv linguist-generated

@@ -1,0 +1,32 @@
+[project]
+name = "bitcoin-price-predictor-app"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "lis-r-barreto", email = "lis_barreto@outlook.com"}
+]
+readme = "README.md"
+requires-python = ">=3.10"  # Atualizado para Python 3.12
+dependencies = [
+    "streamlit",  # Streamlit for building the app
+    "pandas",     # Data manipulation
+    "numpy",      # Numerical computations
+    "tensorflow", # LSTM model
+    "prophet",    # Prophet for time series forecasting
+    "statsmodels", # ARIMA and statistical models
+    "scikit-learn", # Machine learning utilities
+    "matplotlib",  # Basic visualizations
+    "joblib",     # Model saving/loading
+    "ta",         # Technical analysis indicators
+    "pyarrow",    # Parquet file handling
+    "seaborn",    # Advanced visualizations
+    "plotly",      # Interactive visualizations
+    "yfinance" # Yahoo module to get bitcoin data
+]
+
+[tool.poetry]
+packages = [{include = "bitcoin_price_predictor_app", from = "src"}]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
