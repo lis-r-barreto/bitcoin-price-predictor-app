@@ -103,7 +103,7 @@ def predict_next_x_days_lstm(df, window_size=50, x=7):
     Returns:
         list: List of tuples [(date, prediction), ...]
     """
-    model = load_model("/models/lstm_model.h5", custom_objects={"mse": MeanSquaredError()})
+    model = load_model("./models/lstm_model.h5", custom_objects={"mse": MeanSquaredError()})
     scaler = MinMaxScaler(feature_range=(-1, 1))
     
     df['log_return_scaled'] = scaler.fit_transform(df[['log_return']])
