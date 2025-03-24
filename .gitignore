@@ -121,3 +121,5 @@ htmlcov/
 
 # TensorFlow SavedModel directory
 saved_model/
+
+.devcontainer
