@@ -21,7 +21,9 @@ def load_data(parquet_file):
     return pd.read_parquet(parquet_file)
 
 def main():
-    st.set_page_config(page_title="Bitcoin Price Predictor App", layout="wide")
+    img_path = "./img/bitcoin-icon.png"
+    st.set_page_config(page_title="Bitcoin Price Predictor App", layout="wide", page_icon=img_path)
+    st.image(img_path, width=100) 
     st.title("Bitcoin Price Predictor App")
     st.markdown(
         """
