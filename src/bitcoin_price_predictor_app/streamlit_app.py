@@ -1,26 +1,25 @@
+from datetime import timedelta
 import streamlit as st
+import numpy as np
 import pandas as pd
-from tensorflow.keras.models import load_model  # For loading LSTM models
-from tensorflow.keras.losses import MeanSquaredError
 from utils.data_viz_utils import (
     line_plot,
     seasonality_analysis,
     volatility_analysis,
     technical_indicators,
     combined_indicators,
-    plot_lstm_predictions,
 )
 
 from utils.data_process_utils import create_dataset
 
-from utils.model_utils import prepare_lstm_data
+from utils.model_utils import predict_next_x_days_lstm
 
-# Function to load data from a Parquet file
+from utils.data_viz_utils import create_pred_visualization
+
 @st.cache_data
 def load_data(parquet_file):
     return pd.read_parquet(parquet_file)
 
-# Streamlit app
 def main():
     st.set_page_config(page_title="Bitcoin Price Predictor App", layout="wide")
     st.title("Bitcoin Price Predictor App")
@@ -34,18 +33,10 @@ def main():
         """
     )
 
-    # Load data
-    parquet_file = "data/crypto_data_processed.parquet"  # Replace with your file path
+    parquet_file = "/data/crypto_data_processed.parquet"
     df = load_data(parquet_file)
     df_2 = create_dataset(df)
 
-    # Load pre-trained models
-    lstm_model = load_model(
-        "models/lstm_model.h5",
-        custom_objects={"mse": MeanSquaredError()}
-    )
-
-    # Tabs for different sections
     tab1, tab2, tab3 = st.tabs(["📈 Overview", "📊 Technical Indicators", "🔮 Model Prediction"])
 
     # Tab 1: Data Analysis
@@ -116,41 +107,48 @@ def main():
 
         combined_indicators(df)
 
-    # Tab 4: Model Prediction
+    # Tab 3: Model Prediction
     with tab3:
         st.session_state.current_tab = 2
-        st.header("Model Prediction")
-        st.markdown(
-            """
-            Use pre-trained machine learning models (ARIMA, LSTM, Prophet) to predict Bitcoin prices and visualize the results.
-            """
-        )
+        st.header("Prediction Controls")
+        forecast_days = st.slider("Prediction Horizon (Days)", min_value=1, max_value=30, value=7, key="forecast_days")
 
-        # Select column for prediction
-        price_column = 'price'  # Replace with the column name you want to predict
+        if st.button("Generate Forecast", use_container_width=True):
+                with st.spinner("Computing predictions..."):
+                    predictions = predict_next_x_days_lstm(
+                        df=df_2,
+                        window_size=50,
+                        x=forecast_days
+                    )
+                    
+                    pred_dates = [df_2.index[-1] + timedelta(days=i+1) for i in range(forecast_days)]
+                    pred_prices = [p[1] for p in predictions]
+                    
+                    # Format results with historical context
+                    full_df = pd.DataFrame({
+                        'Date': pred_dates,
+                        'Predicted Price': pred_prices
+                    }).set_index('Date')
+                    
+                
+                st.dataframe(
+                    full_df.style.format({"Predicted Price": "${:,.2f}"}),
+                    height=200
+                )
 
-        # Button to run predictions
-        if st.button("Run Predictions 🤖"):
-            st.write("### Running Predictions...")
-
-            # Prepare data for LSTM
-            st.write("#### Preparing Data for LSTM...")
-            _, X_test, scaler = prepare_lstm_data(df_2, column=price_column)
-
-            # Load the pre-trained LSTM model
-            st.write("#### Loading Pre-Trained LSTM Model...")
-            lstm_model = load_model(
-                "models/lstm_model.h5",
-                custom_objects={"mse": MeanSquaredError()}
-            )
-
-            # Make predictions
-            st.write("#### Making Predictions with LSTM...")
-            lstm_predictions = lstm_model.predict(X_test)
-            lstm_predictions = scaler.inverse_transform(lstm_predictions)  # Inverse transform to original scale
-
-            # Plot the results
-            plot_lstm_predictions(df_2, lstm_predictions, title="LSTM Predictions vs Actual Prices")
+                fig = create_pred_visualization(full_df)
+                st.plotly_chart(fig, use_container_width=True)
+                
+                st.metric(
+                    "Next Day Prediction",
+                    f"${pred_prices[0]:,.2f}",
+                    delta=f"{(pred_prices[0]/df['price'].iloc[-1]-1):+,.2%}"
+                )
+                st.metric(
+                    "Forecast Avg. Change",
+                    f"{np.mean(np.diff(pred_prices))/np.mean(pred_prices):+,.2%}"
+                )
+                
     
     if st.session_state.current_tab == 2:
         st.session_state.current_tab = 2
