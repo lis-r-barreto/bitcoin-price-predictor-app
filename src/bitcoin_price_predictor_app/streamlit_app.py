@@ -136,8 +136,7 @@ def main():
                     height=200
                 )
 
-                fig = create_pred_visualization(full_df)
-                st.plotly_chart(fig, use_container_width=True)
+                create_pred_visualization(full_df)
                 
                 st.metric(
                     "Next Day Prediction",
