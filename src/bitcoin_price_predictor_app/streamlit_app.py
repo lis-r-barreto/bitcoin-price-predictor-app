@@ -2,19 +2,19 @@ from datetime import timedelta
 import streamlit as st
 import numpy as np
 import pandas as pd
-from src.utils.data_viz_utils import (
+from utils.data_viz_utils import (
     line_plot,
     seasonality_analysis,
     volatility_analysis,
     technical_indicators,
     combined_indicators,
+    create_pred_visualization,
 )
 
-from src.utils.data_process_utils import create_dataset
+from utils.data_process_utils import create_dataset
 
-from src.utils.model_utils import predict_next_x_days_lstm
+from utils.model_utils import predict_next_x_days_lstm
 
-from src.utils.data_viz_utils import create_pred_visualization
 
 @st.cache_data
 def load_data(parquet_file):
