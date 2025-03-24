@@ -33,7 +33,7 @@ def main():
         """
     )
 
-    parquet_file = "/bitcoin-price-predictor-app/data/crypto_data_processed.parquet"
+    parquet_file = "./data/crypto_data_processed.parquet"
     df = load_data(parquet_file)
     df_2 = create_dataset(df)
 
