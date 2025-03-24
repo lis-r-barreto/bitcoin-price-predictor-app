@@ -72,26 +72,21 @@ def create_sequences(data, window_size=50):
     return np.array(X), np.array(y)
 
 def main():
-    # Extract data and load it
     data_path = extract_data()
     df = load_data(data_path)
 
-    # Checking for duplicates
     print("Number of duplicates:", count_duplicates(df))
 
-    # Validating the frequency of the data
     frequency = validate_frequency(df)
     print("\nFrequency of date differences:")
     print(frequency)
 
-    # Grouping data by date and calculating the average price
     grouped_df = df.groupby('date').agg({'price': 'mean'}).reset_index()
     grouped_df = grouped_df.set_index('date')
 
     print("\nDataFrame grouped by date with average prices:")
     print(grouped_df)
 
-    # Saving the grouped DataFrame to a Parquet file
     grouped_df.to_parquet('data/crypto_data_processed.parquet', engine='pyarrow', compression='snappy')
     print("\nDataFrame saved as 'crypto_data_processed.parquet' successfully!")
 
