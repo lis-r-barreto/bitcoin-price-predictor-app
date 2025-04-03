@@ -80,7 +80,3 @@ The app uses Bitcoin price data from **[Yahoo Finance](https://finance.yahoo.com
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
----
-
-Enjoy exploring Bitcoin price trends and predictions with this app! 🚀
